@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine Surprise 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+
+body{
+  height:100vh;
+  background:radial-gradient(circle at top,#ff5f7e,#2b0010);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#fff;
+  text-align:center;
+}
+
+/* PAGES */
+.page{
+  display:none;
+  position:absolute;
+  inset:0;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.page.active{display:flex}
+
+/* PHOTO */
+.photo{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:5px solid #fff;
+  overflow:hidden;
+  margin-bottom:15px;
+  box-shadow:0 0 40px rgba(255,255,255,.8);
+}
+.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* TEXT */
+h1{font-size:2.4rem;margin-bottom:10px}
+.quote{
+  font-size:1.3rem;
+  max-width:700px;
+  line-height:1.6;
+}
+
+/* BUTTONS */
+.buttons{position:relative;width:300px;height:150px;margin-top:20px}
+
+button{
+  padding:14px 36px;
+  border:none;
+  border-radius:50px;
+  font-size:1.1rem;
+  cursor:pointer;
+}
+
+#yesBtn{
+  background:#fff;
+  color:#6b0016;
+}
+
+#noBtn{
+  background:#ffb3c1;
+  color:#6b0016;
+  position:absolute;
+}
+
+/* OPTIONS */
+.options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:20px;
+}
+.option{
+  background:rgba(255,255,255,.2);
+  color:#fff;
+}
+
+/* EFFECTS */
+.heart,.balloon{
+  position:absolute;
+  bottom:-30px;
+  animation:float 4s linear forwards;
+}
+@keyframes float{
+  to{transform:translateY(-120vh);opacity:0}
+}
+
+.firework{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:#fff;
+  border-radius:50%;
+  animation:boom 1s ease-out forwards;
+}
+@keyframes boom{
+  to{transform:translate(var(--x),var(--y));opacity:0}
+}
+
+/* AUDIO OVERLAY */
+#audioOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  z-index:10;
+}
+#audioOverlay button{
+  background:#fff;
+  color:#6b0016;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO OVERLAY -->
+<div id="audioOverlay">
+  <h1>Hey Golu bacha 💖</h1>
+  <p class="quote">Want to play our song… or skip?</p>
+  <button onclick="playSong()">Play 🎶</button>
+  <button onclick="skipSong()">Skip 😌</button>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+  <div class="photo">
+    <img src="golu.jpg">
+  </div>
+  <h1>Golu bacha… 💍</h1>
+  <p class="quote">
+    If love had a face,<br>
+    it would smile like you.<br>
+    Will you be my Valentine?
+  </p>
+
+  <div class="buttons" id="btnArea">
+    <button id="yesBtn">Yes 💞</button>
+    <button id="noBtn">No 🙈</button>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <div class="photo">
+    <img src="golu.jpg">
+  </div>
+  <h1>She said YES ❤️</h1>
+  <p class="quote">
+    Tonight isn’t planned…<br>
+    it’s felt 😌✨
+  </p>
+
+  <div class="options">
+    <button class="option">💥 Double Trouble</button>
+    <button class="option">😈 Kinky & Fun</button>
+    <button class="option">😉 Flirty Vibes</button>
+    <button class="option">🎁 Surprise Me</button>
+  </div>
+</div>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="music" src="song.mp3" loop></audio>
+
+<script>
+const music = document.getElementById("music");
+const overlay = document.getElementById("audioOverlay");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const btnArea = document.getElementById("btnArea");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+
+/* AUDIO */
+function playSong(){
+  music.volume = 0.8;
+  music.play();
+  overlay.style.display="none";
+}
+function skipSong(){
+  overlay.style.display="none";
+}
+
+/* NO BUTTON FOLLOWS CURSOR */
+btnArea.addEventListener("mousemove",()=>{
+  const x = Math.random()*(btnArea.offsetWidth-100);
+  const y = Math.random()*(btnArea.offsetHeight-40);
+  noBtn.style.left = x+"px";
+  noBtn.style.top = y+"px";
+});
+
+/* YES */
+yesBtn.onclick = ()=>{
+  page1.classList.remove("active");
+  page2.classList.add("active");
+  effects();
+};
+
+/* OPTIONS */
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("option")){
+    document.body.innerHTML=`
+      <div class="page active">
+        <h1>Have a beautiful night ❤️</h1>
+        <p class="quote">
+          Let the smiles linger,<br>
+          the moments slow down,<br>
+          and the night remember you 😌✨
+        </p>
+      </div>`;
+    effects();
+  }
+});
+
+/* EFFECTS */
+function effects(){
+  for(let i=0;i<20;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.textContent="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=18+Math.random()*24+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  }
+  for(let i=0;i<12;i++){
+    let b=document.createElement("div");
+    b.className="balloon";
+    b.textContent="🎈";
+    b.style.left=Math.random()*100+"vw";
+    b.style.fontSize=26+Math.random()*14+"px";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),4000);
+  }
+  for(let i=0;i<18;i++){
+    let f=document.createElement("div");
+    f.className="firework";
+    f.style.left="50vw";
+    f.style.top="50vh";
+    f.style.setProperty("--x",(Math.random()*300-150)+"px");
+    f.style.setProperty("--y",(Math.random()*300-150)+"px");
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+  }
+}
+</script>
+
+</body>
+</html>
